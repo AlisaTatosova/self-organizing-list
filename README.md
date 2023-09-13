@@ -5,13 +5,13 @@ The Self-Organizing List C++ class is a versatile data structure that allows you
 A self-organizing list is a data structure that reorganizes its elements based on access frequency. Elements that are frequently accessed are moved closer to the front of the list to reduce access time. This class provides a C++ implementation of a self-organizing list with various operations to manipulate and organize the elements efficiently.
 
 # Features
-Efficient Access: Frequently accessed elements are moved towards the front of the list.
-Standard Container Functions: Provides familiar container functions like push_back, push_front, pop_back, pop_front, etc.
-Sorting: Maintains an ascending and descending order for efficient searches.
-Resizable: The list can be resized to accommodate more or fewer elements.
-Reversing: Easily reverse the order of elements in the list.
-Splicing: Merge two self-organizing lists together.
-Customizable: Template-based, allowing storage of any data type.
+* Efficient Access: Frequently accessed elements are moved towards the front of the list.
+* Standard Container Functions: Provides familiar container functions like push_back, push_front, pop_back, pop_front, etc.
+* Sorting: Maintains an ascending and descending order for efficient searches.
+* Resizable: The list can be resized to accommodate more or fewer elements.
+* Reversing: Easily reverse the order of elements in the list.
+* Splicing: Merge two self-organizing lists together.
+* Customizable: Template-based, allowing storage of any data type.
 
 # How to Compile
 1) g++ self_organizing_list.cpp main.cpp -o program
