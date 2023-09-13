@@ -84,18 +84,18 @@ this function refers pointer m_asc of the inserted node to the next greater node
 * advance_node(Node* node)
 this function provide a self-organizing nature of this list.Elements that are accessed are moved closer to the front of the list to reduce access time.
 
-* Comparison Operators
+** Comparison Operators
 The following operators allow you to compare SelfOrganizingList objects:
 
-==: Checks if two lists are equal.
-!=: Checks if two lists are not equal.
->: Checks if one list is greater than the other.
->=: Checks if one list is greater than or equal to the other.
-<: Checks if one list is less than the other.
-<=: Checks if one list is less than or equal to the other.
+    ==: Checks if two lists are equal.
+    !=: Checks if two lists are not equal.
+    >: Checks if one list is greater than the other.
+    >=: Checks if one list is greater than or equal to the other.
+    <: Checks if one list is less than the other.
+    <=: Checks if one list is less than or equal to the other.
 
-SelfOrganizingList<int> list1, list2;
-// Populate list1 and list2
-if (list1 == list2) {
-    // Lists are equal
-}
+    SelfOrganizingList<int> list1, list2;
+    // Populate list1 and list2
+    if (list1 == list2) {
+        // Lists are equal    
+    }
