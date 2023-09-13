@@ -87,9 +87,9 @@ Customizable: Template-based, allowing storage of any data type.
 # Comparison Operators
 The following operators allow you to compare SelfOrganizingList objects:
 
-* ==: Checks if two lists are equal.
-* !=: Checks if two lists are not equal.
-* >: Checks if one list is greater than the other.
-* >=: Checks if one list is greater than or equal to the other.
-* <: Checks if one list is less than the other.
-* <=: Checks if one list is less than or equal to the other.
+* ==  Checks if two lists are equal.
+* !=  Checks if two lists are not equal.
+* >  Checks if one list is greater than the other.
+* >=  Checks if one list is greater than or equal to the other.
+* <  Checks if one list is less than the other.
+* <=  Checks if one list is less than or equal to the other.
