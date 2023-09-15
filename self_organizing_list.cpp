@@ -45,20 +45,30 @@ SelfOrganizingList<T>::SelfOrganizingList(SelfOrganizingList<T>&& other) noexcep
     , m_asc_head{other.m_asc_head}
     , m_desc_head{other.m_desc_head}
     , m_size{0} {
-    other.head = nullptr;
-    other.tail = nullptr;
-    other.size = 0;
+    other.m_head = nullptr;
+    other.m_tail = nullptr;
+    other.m_asc_head = nullptr;
+    other.m_desc_head = nullptr;
+    other.m_size = 0;
 }
 
 template <typename T>
-SelfOrganizingList<T>::SelfOrganizingList(const T* arr, std::size_t size) : m_head(nullptr), m_tail(nullptr), m_asc_head{nullptr}, m_desc_head{nullptr} {
+SelfOrganizingList<T>::SelfOrganizingList(const T* arr, std::size_t size) 
+    : m_head(nullptr)
+    , m_tail(nullptr)
+    , m_asc_head{nullptr}
+    , m_desc_head{nullptr} {
     for (std::size_t i = 0; i < size; ++i) {
         push_back(arr[i]);
     }
 }
 
 template <typename T>
-SelfOrganizingList<T>::SelfOrganizingList(std::initializer_list<T> list) : m_head(nullptr), m_tail(nullptr), m_asc_head{nullptr}, m_desc_head{nullptr} {
+SelfOrganizingList<T>::SelfOrganizingList(std::initializer_list<T> list)
+    : m_head(nullptr)
+    , m_tail(nullptr)
+    , m_asc_head{nullptr}
+    , m_desc_head{nullptr} {
     for (const auto& el : list) {
         push_back(el);
     }
@@ -84,7 +94,7 @@ SelfOrganizingList<T>& SelfOrganizingList<T>::operator=(const SelfOrganizingList
 }
 
 template <typename T>
-SelfOrganizingList<T>& SelfOrganizingList<T>::operator=(SelfOrganizingList<T>&& other) {
+SelfOrganizingList<T>& SelfOrganizingList<T>::operator=(SelfOrganizingList<T>&& other) noexcept {
     if (this == &other) {
         return *this;
     }

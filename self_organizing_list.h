@@ -32,7 +32,7 @@ public:
 
 public:
     SelfOrganizingList& operator=(const SelfOrganizingList& other);
-    SelfOrganizingList& operator=(SelfOrganizingList&& other);
+    SelfOrganizingList& operator=(SelfOrganizingList&& other) noexcept;
     void assign(std::initializer_list<T> list);
     T& front(); //access the first element
     const T& front() const;
