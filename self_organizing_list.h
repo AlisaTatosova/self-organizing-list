@@ -26,14 +26,17 @@ public:
     SelfOrganizingList(); 
     SelfOrganizingList(const SelfOrganizingList& other);
     SelfOrganizingList(SelfOrganizingList&& other) noexcept;
+    SelfOrganizingList(const T* arr, std::size_t size);
+    SelfOrganizingList(std::initializer_list<T> list);
     ~SelfOrganizingList();
 
 public:
     SelfOrganizingList& operator=(const SelfOrganizingList& other);
     SelfOrganizingList& operator=(SelfOrganizingList&& other);
-    T& front();
+    void assign(std::initializer_list<T> list);
+    T& front(); //access the first element
     const T& front() const;
-    T& back();
+    T& back(); //access the last element
     const T& back() const;
     void push_back(const T& val);
     void push_front(const T& val);
@@ -46,7 +49,9 @@ public:
     void erase(const std::size_t start_pos, const std::size_t end_pos);
     void resize(const std::size_t count);
     void reverse();
-    void splice(std::size_t pos, SelfOrganizingList<T>& list);
+    void splice(std::size_t pos, SelfOrganizingList<T>& list); //moves elements from another list
+    void swap(SelfOrganizingList<T>& other);
+    void unique();
     const T get_at(const std::size_t pos);
     void clear();
     std::size_t size() const;
@@ -67,10 +72,10 @@ public:
 private:
     void put_back(Node* node);
     void put_front(Node* node);
-    void put_in_sorted_order(Node* node);
+    void put_in_sorted_order(Node* node); // refers pointer m_asc of the inserted node to the next greater node, and pointer m_desc to the next lesser node
     void remove_from_sorted_order(Node* node);
     Node* get_node_at_pos(const std::size_t pos);
-    void advance_node(Node* node);
+    void advance_node(Node* node); //provides a self-organizing nature of this list.Elements that are accessed are moved closer to the front of the list to reduce access time.
 };
 
 #endif

@@ -51,6 +51,20 @@ SelfOrganizingList<T>::SelfOrganizingList(SelfOrganizingList<T>&& other) noexcep
 }
 
 template <typename T>
+SelfOrganizingList<T>::SelfOrganizingList(const T* arr, std::size_t size) : m_head(nullptr), m_tail(nullptr), m_asc_head{nullptr}, m_desc_head{nullptr} {
+    for (std::size_t i = 0; i < size; ++i) {
+        push_back(arr[i]);
+    }
+}
+
+template <typename T>
+SelfOrganizingList<T>::SelfOrganizingList(std::initializer_list<T> list) : m_head(nullptr), m_tail(nullptr), m_asc_head{nullptr}, m_desc_head{nullptr} {
+    for (const auto& el : list) {
+        push_back(el);
+    }
+}
+
+template <typename T>
 SelfOrganizingList<T>::~SelfOrganizingList() {
     clear();
 }
@@ -86,6 +100,12 @@ SelfOrganizingList<T>& SelfOrganizingList<T>::operator=(SelfOrganizingList<T>&& 
     other.m_tail = nullptr;
     other.m_size = 0;
     return *this;
+}
+
+template <typename T>
+void SelfOrganizingList<T>::assign(std::initializer_list<T> list) {
+    clear();
+    insert(0, list);
 }
 
 template <typename T>
@@ -323,6 +343,29 @@ void SelfOrganizingList<T>::splice(std::size_t pos, SelfOrganizingList<T>& list)
         head = head -> m_next;
     }
     list.clear();
+}
+
+template <typename T>
+void SelfOrganizingList<T>::swap(SelfOrganizingList<T>& other) {
+    std::swap(m_head, other.m_head);
+    std::swap(m_tail, other.m_tail);
+    std::swap(m_asc_head, other.m_asc_head);
+    std::swap(m_desc_head, other.m_desc_head);
+}
+
+template <typename T>
+void SelfOrganizingList<T>::unique() {
+    Node* curr = m_head;
+    std::size_t pos = 0;
+    while (curr && curr -> m_next) {
+        ++pos;
+        if (curr -> m_value == curr -> m_next -> m_value) {
+            erase(pos);
+            --pos;
+        } else {
+            curr = curr -> m_next;
+        }
+    }
 }
 
 template <typename T>
