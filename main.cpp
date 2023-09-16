@@ -16,12 +16,12 @@ int main() {
     list1.pop_front();
 
     std::cout << "List before geting some position: ";
-    list1.print();
+    list1.print_from_head();
 
     const int a = list1.get_at(2);
 
     std::cout << "List after geting position: ";
-    list1.print();
+    list1.print_from_head();
     
     std::cout << "Sorted list in ascending: ";
     list1.print_ascending_order();
@@ -35,7 +35,7 @@ int main() {
     list2.push_back(3000);
 
     std::cout << "List2: ";
-    list2.print();
+    list2.print_from_head();
 
     list2 = list1;
     
@@ -44,7 +44,7 @@ int main() {
     list2.erase(1);
 
     std::cout << "List2 after some inserts and erases: ";
-    list2.print();    
+    list2.print_from_head();    
     
     SelfOrganizingList<int> list3;
 
@@ -54,17 +54,17 @@ int main() {
     list3.push_back(4);
 
     std::cout << "List3: ";
-    list3.print();
+    list3.print_from_head();
    
     std::cout << "List3 after reverse: ";
     list3.reverse();
-    list3.print();
+    list3.print_from_head();
 
    
     list3.splice(2, list2);
 
     std::cout << "List3 after splicing with list2: ";
-    list3.print();
+    list3.print_from_head();
 
     return 0;
 }

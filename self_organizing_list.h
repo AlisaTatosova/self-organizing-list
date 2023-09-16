@@ -26,18 +26,28 @@ public:
     SelfOrganizingList(); 
     SelfOrganizingList(const SelfOrganizingList& other);
     SelfOrganizingList(SelfOrganizingList&& other) noexcept;
-    SelfOrganizingList(const T* arr, std::size_t size);
+    SelfOrganizingList(std::size_t size);
     SelfOrganizingList(std::initializer_list<T> list);
     ~SelfOrganizingList();
 
 public:
     SelfOrganizingList& operator=(const SelfOrganizingList& other);
     SelfOrganizingList& operator=(SelfOrganizingList&& other) noexcept;
-    void assign(std::initializer_list<T> list);
+    void assign(std::initializer_list<T> list); 
+
+    //element access
     T& front(); //access the first element
     const T& front() const;
     T& back(); //access the last element
     const T& back() const;
+
+public:
+    const T get_at(const std::size_t pos);
+    std::size_t size() const;
+    bool empty();
+
+public:
+    //modifiers
     void push_back(const T& val);
     void push_front(const T& val);
     void insert(const std::size_t pos, const T& val);
@@ -47,16 +57,21 @@ public:
     void pop_front();
     void erase(const std::size_t pos);
     void erase(const std::size_t start_pos, const std::size_t end_pos);
+    void emplace_front(const std::size_t count);
     void resize(const std::size_t count);
-    void reverse();
-    void splice(std::size_t pos, SelfOrganizingList<T>& list); //moves elements from another list
     void swap(SelfOrganizingList<T>& other);
-    void unique();
-    const T get_at(const std::size_t pos);
     void clear();
-    std::size_t size() const;
-    bool empty();
-    void print();
+
+public:
+    void merge(SelfOrganizingList<T>& other);
+    void splice(std::size_t pos, SelfOrganizingList<T>& list); //moves elements from another list
+    void remove(const T& val);
+    void reverse();
+    void unique();
+    void sort();
+    
+public:
+    void print_from_head();
     void print_ascending_order();
     void print_descending_order();
     void print_from_tail();
