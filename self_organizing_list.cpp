@@ -392,6 +392,7 @@ void SelfOrganizingList<T>::merge(SelfOrganizingList<T>& other) {
         m_tail = curr;
         put_in_sorted_order(m_tail);
     }
+    other.m_head = nullptr;
     other.m_asc_head = nullptr;
     other.m_desc_head = nullptr;
     other.m_tail = nullptr;
