@@ -1,5 +1,6 @@
 #include "self_organizing_list.h"
 
+// deafult constructor
 template <typename T>
 SelfOrganizingList<T>::Node::Node() 
     : m_next{nullptr}
@@ -7,6 +8,7 @@ SelfOrganizingList<T>::Node::Node()
     , m_asc{nullptr}
     , m_desc{nullptr} {}
 
+// parametrized constructor
 template <typename T>
 SelfOrganizingList<T>::Node::Node(const T& value)
     : m_value{value}
@@ -15,6 +17,7 @@ SelfOrganizingList<T>::Node::Node(const T& value)
     , m_asc{nullptr}
     , m_desc{nullptr} {}
 
+// deafult constructor
 template <typename T>
 SelfOrganizingList<T>::SelfOrganizingList() 
     : m_head{nullptr}
@@ -23,6 +26,7 @@ SelfOrganizingList<T>::SelfOrganizingList()
     , m_desc_head{nullptr}
     , m_size{0} {}
 
+// copy constructor
 template <typename T>
 SelfOrganizingList<T>::SelfOrganizingList(const SelfOrganizingList<T>& other) 
     : m_head{nullptr}
@@ -32,12 +36,13 @@ SelfOrganizingList<T>::SelfOrganizingList(const SelfOrganizingList<T>& other)
     , m_size{0} {
 
     Node* curr = other.m_head;
-    while(curr) {
+    while (curr) {
         push_back(curr -> m_value);
         curr = curr -> m_next;
     }
 }
 
+// move constructor
 template <typename T>
 SelfOrganizingList<T>::SelfOrganizingList(SelfOrganizingList<T>&& other) noexcept
     : m_head{other.m_head}
@@ -52,6 +57,7 @@ SelfOrganizingList<T>::SelfOrganizingList(SelfOrganizingList<T>&& other) noexcep
     other.m_size = 0;
 }
 
+// parameterized constructor
 template <typename T>
 SelfOrganizingList<T>::SelfOrganizingList(std::size_t size) 
     : m_head(nullptr)
@@ -63,6 +69,7 @@ SelfOrganizingList<T>::SelfOrganizingList(std::size_t size)
     }
 }
 
+// constructor with initializer list
 template <typename T>
 SelfOrganizingList<T>::SelfOrganizingList(std::initializer_list<T> list)
     : m_head(nullptr)
@@ -74,31 +81,36 @@ SelfOrganizingList<T>::SelfOrganizingList(std::initializer_list<T> list)
     }
 }
 
+// destructor
 template <typename T>
 SelfOrganizingList<T>::~SelfOrganizingList() {
     clear();
 }
 
+// copy assingment operator
 template <typename T>
 SelfOrganizingList<T>& SelfOrganizingList<T>::operator=(const SelfOrganizingList<T>& other) {
+    // checking for self assignment
     if (this == &other) {
         return *this;
     }
-    clear();
+    clear(); // clearing list in which we assign
     Node* curr = other.m_head;
-    while (curr) {
+    while (curr) { 
         push_back(curr -> m_value);
         curr = curr -> m_next;
     }
     return *this;
 }
 
+ // move assignment operator
 template <typename T>
 SelfOrganizingList<T>& SelfOrganizingList<T>::operator=(SelfOrganizingList<T>&& other) noexcept {
+    // checking for self assignment
     if (this == &other) {
         return *this;
     }
-    clear();
+    clear(); // clearing list in which we assign
     m_size = other.m_size;
     m_head = other.m_head;
     m_asc_head = other.m_asc_head;
@@ -112,15 +124,17 @@ SelfOrganizingList<T>& SelfOrganizingList<T>::operator=(SelfOrganizingList<T>&& 
     return *this;
 }
 
+// assigns elements of initializer list to list
 template <typename T>
 void SelfOrganizingList<T>::assign(std::initializer_list<T> list) {
-    clear();
-    insert(0, list);
+    clear(); // clear list
+    insert(0, list); // insert initializer list values to list
 }
 
+//access the first element
 template <typename T>
 T& SelfOrganizingList<T>::front() {
-    Node* curr = get_node_at_pos(0);
+    Node* curr = get_node_at_pos(0); // getting node at position 0
     return curr -> m_value;
 }
 
@@ -130,9 +144,10 @@ const T& SelfOrganizingList<T>::front() const {
     return curr -> m_value;
 }
 
+//access the last element
 template <typename T>
 T& SelfOrganizingList<T>::back() {
-    Node* curr = get_node_at_pos(m_size - 1);
+    Node* curr = get_node_at_pos(m_size - 1); // getting node at last position
     return curr -> m_value;
 }
 
@@ -142,43 +157,48 @@ const T& SelfOrganizingList<T>::back() const {
     return curr -> m_value;
 }
 
+// get value of node at some position
 template <typename T>   
 const T SelfOrganizingList<T>::get_at(const std::size_t pos) {
-    Node* curr = get_node_at_pos(pos);
-    advance_node(curr);
+    Node* curr = get_node_at_pos(pos); // geting node of some position
+    advance_node(curr); // after getting node, call advance_node(Node*) function to swap that node with the node in his left: moving closer node that has been accessed to reduce access time next time getting that node.
     return curr -> m_value;
 }
 
+// return the number of elements
 template <typename T>
 std::size_t SelfOrganizingList<T>::size() const {
     return m_size;
 }
 
+// checks emptiness
 template <typename T>   
 bool SelfOrganizingList<T>::empty() {
     return m_size == 0;
 }
 
+// adds element at the end
 template <typename T>
 void SelfOrganizingList<T>::push_back(const T& val) {
     Node* new_node = new Node(val);
-    if (!m_tail) {
+    if (!m_tail) { // if there is no element 
         m_head = new_node;
         m_tail = new_node;
-    } else {
+    } else { 
         Node* tmp = m_tail;
         tmp -> m_next = new_node;
         new_node -> m_prev = tmp;
         m_tail = new_node;
     }
     ++m_size;
-    put_in_sorted_order(new_node);
+    put_in_sorted_order(new_node); // refers pointer m_asc of the inserted node to the next greater node, and pointer m_desc to the next lesser node
 }
 
+// adds element at front
 template <typename T>
 void SelfOrganizingList<T>::push_front(const T& val) {
     Node* new_node = new Node(val);
-    if (!m_head) {
+    if (!m_head) { // if there is no element
         m_head = new_node;
         m_tail = new_node;
     } else {
@@ -188,16 +208,17 @@ void SelfOrganizingList<T>::push_front(const T& val) {
         m_head = new_node;
     }
     ++m_size;
-    put_in_sorted_order(new_node);
+    put_in_sorted_order(new_node); // refers pointer m_asc of the inserted node to the next greater node, and pointer m_desc to the next lesser node
 }
 
+// deletes last element
 template <typename T>
 void SelfOrganizingList<T>::pop_back() {
     if (!m_head) {
         throw std::runtime_error("There is no element in list.");
     } 
     Node* tmp = nullptr;
-    if (m_head == m_tail) {
+    if (m_head == m_tail) { // if there is single element
         tmp = m_head;
         m_head = nullptr;
         m_tail = nullptr;
@@ -211,10 +232,11 @@ void SelfOrganizingList<T>::pop_back() {
         m_tail -> m_next = nullptr;
     }
     --m_size;
-    remove_from_sorted_order(tmp);
+    remove_from_sorted_order(tmp);  // removing node from sorted order
     delete tmp;
 }
 
+// deletes front element
 template <typename T>
 void SelfOrganizingList<T>::pop_front() {
     if (!m_head) {
@@ -222,7 +244,7 @@ void SelfOrganizingList<T>::pop_front() {
     } 
         
     Node* tmp = nullptr;
-    if (m_head == m_tail) {
+    if (m_head == m_tail) { // if there is single element
         tmp = m_head;
         m_head = nullptr;
         m_tail = nullptr;
@@ -232,19 +254,20 @@ void SelfOrganizingList<T>::pop_front() {
         m_head = node;
     }
     --m_size;
-    remove_from_sorted_order(tmp);
+    remove_from_sorted_order(tmp);  // removing node from sorted order
     delete tmp;
 }
 
+// inserts some value at some position
 template <typename T>
 void SelfOrganizingList<T>::insert(const std::size_t pos, const T& val) {
-    if (pos < 0 || pos > m_size) {
+    if (pos < 0 || pos > m_size) { // checking if position is invalid
         throw std::out_of_range("Invalid postion");
-    } else if (pos == 0) {
+    } else if (pos == 0) { // checking if position is front
         push_front(val);
-    } else if (pos == m_size) {
+    } else if (pos == m_size) { // cheking if insert must be at the end of list
         push_back(val);
-    } else {
+    } else { 
         Node* to_insert = new Node(val);
         Node* node = get_node_at_pos(pos);
         node -> m_prev -> m_next = to_insert;
@@ -252,19 +275,20 @@ void SelfOrganizingList<T>::insert(const std::size_t pos, const T& val) {
         to_insert -> m_next = node;
         node -> m_prev = to_insert; 
         ++m_size;
-        put_in_sorted_order(to_insert);
+        put_in_sorted_order(to_insert); // putting node in sorted order
     }
 }
 
+// inserts some count of some value starting from some position 
 template <typename T>
 void SelfOrganizingList<T>::insert(const std::size_t pos, const std::size_t count, const T& val) {
-    if (pos < 0 || pos > m_size) {
+    if (pos < 0 || pos > m_size) { // checking if position is invalid
         throw std::out_of_range("Invalid postion");
-    } else if (pos == 0) {
+    } else if (pos == 0) { // checking if position is front
         for (int i = 0; i < count; ++i) {
             push_front(val);
         }
-    } else if (pos == m_size) {
+    } else if (pos == m_size) { // cheking if insert must be at the end of list
         for (int i = 0; i < count; ++i) {
             push_back(val);
         }
@@ -277,11 +301,12 @@ void SelfOrganizingList<T>::insert(const std::size_t pos, const std::size_t coun
             to_insert -> m_next = node;
             node -> m_prev = to_insert; 
             ++m_size;
-            put_in_sorted_order(to_insert);
+            put_in_sorted_order(to_insert); // putting node in sorted order
         }
     }
 }
 
+// inserts initializer list values starting from some positin
 template <typename T>
 void SelfOrganizingList<T>::insert(const std::size_t pos, const std::initializer_list<T>& values) {
     int index = pos;
@@ -291,33 +316,35 @@ void SelfOrganizingList<T>::insert(const std::size_t pos, const std::initializer
     }
 }
 
+// erases element from some position
 template <typename T>
 void SelfOrganizingList<T>::erase(const std::size_t pos) {
-    if (pos < 0 || pos >= m_size) {
+    if (pos < 0 || pos >= m_size) { // checking if position is invalid
         throw std::out_of_range("Invalid postion");
-    } else if (pos == 0) {
+    } else if (pos == 0) { // checking if position is front
         pop_front();
-    } else if (pos == m_size - 1) {
+    } else if (pos == m_size - 1) { // checking if it is last position
         pop_back();
     } else {
         Node* to_delete = get_node_at_pos(pos);
         to_delete -> m_next -> m_prev = to_delete -> m_prev;
         to_delete -> m_prev -> m_next = to_delete -> m_next;
         --m_size;
-        remove_from_sorted_order(to_delete);
+        remove_from_sorted_order(to_delete); // removing node from sorted order
         delete to_delete;
     }
 }
 
+// erases elements of some interval
 template <typename T>
 void SelfOrganizingList<T>::erase(const std::size_t start_pos, const std::size_t end_pos) {
-    if (start_pos < 0 || start_pos >= m_size || end_pos < 0 || end_pos >= m_size) {
+    if (start_pos < 0 || start_pos >= m_size || end_pos < 0 || end_pos >= m_size) { // checking if position is invalid
         throw std::out_of_range("Invalid postion");
-    } else if (start_pos == 0) {
+    } else if (start_pos == 0) { // checking if start position is front
         for (int i = 0; i < end_pos; ++i) {
             pop_front();
         }
-    } else if (start_pos == m_size - 1) {
+    } else if (start_pos == m_size - 1) { // checking if start position is last position
         pop_back();
     } else {
         int index = start_pos;
@@ -327,32 +354,35 @@ void SelfOrganizingList<T>::erase(const std::size_t start_pos, const std::size_t
     }
 }
 
+// changes size of list adding new nodes at front(with values 0)
 template <typename T>
 void SelfOrganizingList<T>::emplace_front(const std::size_t count) {
-    if (count == m_size) {
+    if (count == m_size) { // if count = size there is nothing done
         return;
-    } else if (count > m_size) {
+    } else if (count > m_size) { // if count > size inserting at front count - size nodes(with value 0) 
         insert(0, count - m_size, 0);
-    } else {
+    } else { // if count < size erasing size - count nodes from front
         erase(0, m_size - count);
     }
 }
 
+// changes size of list adding new nodes at the end(with values 0)
 template <typename T>
 void SelfOrganizingList<T>::resize(const std::size_t count) {
-    if (count == m_size) {
+    if (count == m_size) { // if count = size there is nothing done
         return;
-    } else if (count > m_size) {
+    } else if (count > m_size) { // if count > size inserting at the end count - size nodes(with value 0) 
         for (int i = 0; i < m_size - count; ++i) {
             push_back(0);
         }
-    } else {
+    } else { // if count < size erasing from end
         while (m_size > count) {
             erase(m_size - 1);
         }
     }
 }
 
+// swap lists
 template <typename T>
 void SelfOrganizingList<T>::swap(SelfOrganizingList<T>& other) {
     std::swap(m_head, other.m_head);
@@ -362,9 +392,10 @@ void SelfOrganizingList<T>::swap(SelfOrganizingList<T>& other) {
     std::swap(m_size, other.m_size); 
 }
 
+// merges 2lists
 template <typename T>
 void SelfOrganizingList<T>::merge(SelfOrganizingList<T>& other) {
-    if (!other.m_head) {
+    if (!other.m_head) { // if other list is empty
         return;
     }
 
@@ -392,18 +423,22 @@ void SelfOrganizingList<T>::merge(SelfOrganizingList<T>& other) {
         m_tail = curr;
         put_in_sorted_order(m_tail);
     }
+    // assinging nullptr to all pointers of other
     other.m_head = nullptr;
     other.m_asc_head = nullptr;
     other.m_desc_head = nullptr;
     other.m_tail = nullptr;
     other.m_size = 0;
+    return;
 }
 
+// moves elements from another list in current list starting from some position
 template <typename T>
 void SelfOrganizingList<T>::splice(std::size_t pos, SelfOrganizingList<T>& list) {
-    if (pos < 0 || list.empty()) {
+    if (pos < 0 || list.empty()) {  // if position invalid or list from which we splice is empty
         return;
     }
+    // inserting list to the current list starting from some position
     Node* head = list.m_head;
     for (int i = 0; i < list.size(); ++i) {
         insert(pos + i, head -> m_value);
@@ -412,6 +447,7 @@ void SelfOrganizingList<T>::splice(std::size_t pos, SelfOrganizingList<T>& list)
     list.clear();
 }
 
+// removes elements with some value
 template <typename T>
 void SelfOrganizingList<T>::remove(const T& val) {
     Node* curr = m_head;
@@ -429,6 +465,7 @@ void SelfOrganizingList<T>::remove(const T& val) {
     }
 }
 
+// reverses the list
 template <typename T>
 void SelfOrganizingList<T>::reverse() {
     Node* curr = nullptr;
@@ -438,21 +475,22 @@ void SelfOrganizingList<T>::reverse() {
     while (new_tail) {
         curr = new_tail;
         tmp = curr -> m_next;
-        curr -> m_next = curr -> m_prev;
-        curr -> m_prev = tmp;
+        curr -> m_next = curr -> m_prev; // reverse the next pointer
+        curr -> m_prev = tmp; // reverse the prev pointer
         new_tail = tmp;
     }
-    m_tail = m_head;
-    m_head = curr;
+    m_tail = m_head; // the old head becomes the new tail
+    m_head = curr; // the current node becomes the new head
 }
 
+// removes neighbour dublicate elements
 template <typename T>
 void SelfOrganizingList<T>::unique() {
     Node* curr = m_head;
     std::size_t pos = 0;
     while (curr && curr -> m_next) {
         ++pos;
-        if (curr -> m_value == curr -> m_next -> m_value) {
+        if (curr -> m_value == curr -> m_next -> m_value) { // if neighbour element are dublicates
             erase(pos);
             --pos;
         } else {
@@ -461,6 +499,7 @@ void SelfOrganizingList<T>::unique() {
     }
 }
 
+// sorts the list
 template <typename T>
 void SelfOrganizingList<T>::sort() {
     m_head = m_asc_head;
@@ -473,6 +512,7 @@ void SelfOrganizingList<T>::sort() {
     }
 }
 
+// removes all nodes
 template <typename T>
 void SelfOrganizingList<T>::clear() {
     while (m_head) {
@@ -480,6 +520,7 @@ void SelfOrganizingList<T>::clear() {
         delete m_head;
         m_head = curr;
     }
+    // assinging nullptr to all pointers
     m_head = nullptr;
     m_tail = nullptr;
     m_asc_head = nullptr;
@@ -487,6 +528,7 @@ void SelfOrganizingList<T>::clear() {
     m_size = 0;
 }
 
+// print starting from head
 template <typename T>
 void SelfOrganizingList<T>::print_from_head() {
     Node* curr = m_head;
@@ -497,6 +539,7 @@ void SelfOrganizingList<T>::print_from_head() {
     std::cout << std::endl;
 }
 
+// print starting from tail
 template <typename T>
 void SelfOrganizingList<T>::print_from_tail() {
     Node* curr = m_tail;
@@ -507,6 +550,7 @@ void SelfOrganizingList<T>::print_from_tail() {
     std::cout << std::endl;
 }
 
+// print in ascending order
 template <typename T>    
 void SelfOrganizingList<T>::print_ascending_order() {
     Node* curr = m_asc_head;
@@ -517,6 +561,7 @@ void SelfOrganizingList<T>::print_ascending_order() {
     std::cout << std::endl;
 }
 
+// print in descending order
 template <typename T>
 void SelfOrganizingList<T>::print_descending_order() {
     Node* curr = m_desc_head;
@@ -529,43 +574,49 @@ void SelfOrganizingList<T>::print_descending_order() {
 
 template <typename T>
 bool SelfOrganizingList<T>::operator==(const SelfOrganizingList<T>& other) const {
+    // initialize pointers to the heads of both lists
     Node* curr1 = m_head;
     Node* curr2 = other.m_head;
 
+    // traverse both lists 
     while (curr1 && curr2) {
+        // compare the values of the current nodes
         if (curr1 -> m_value != curr2 -> m_value) {
-            return false;
+            return false; // if values are not equal, lists are not equal
         }
-        curr1 = curr1 -> m_next;
-        curr2 = curr2 -> m_next;
+        // move to the next nodes in both lists
+        curr1 = curr1->m_next;
+        curr2 = curr2->m_next;
     }
+
+    // check if both lists have been traversed completely
+    // if both are nullptr, the lists are equal; otherwise, they're not
     return curr1 == nullptr && curr2 == nullptr;
 }
 
 template <typename T>
-bool SelfOrganizingList<T>::operator!=(const SelfOrganizingList<T>& other) const {
-    return !(*this == other);
-}
-
-template <typename T>
 bool SelfOrganizingList<T>::operator>(const SelfOrganizingList<T>& other) const {
+    // initialize pointers to the heads of both lists
     Node* curr1 = m_head;
     Node* curr2 = other.m_head;
 
+    // traverse both lists 
     while (curr1 && curr2) {
         if (curr1 -> m_value >= curr2 -> m_value) {
+            // if the current value in the current list is greater or equal,
+            // move to the next nodes in both lists
             curr1 = curr1 -> m_next;
             curr2 = curr2 -> m_next;
         } else if (curr1 -> m_value < curr2 -> m_value) {
-            return false;
+            return false; // if the current value in the current list is less, the current list is not greater
         }
     }
 
-    //if we reach here, it means one list is a prefix of the other.
+    // if we reach here, it means one list is a prefix of the other.
     if (curr1) {
-        return true;
+        return true; // the current list is greater because it still has elements
     } else if (curr2) {
-        return false;
+        return false; // the other list is greater because it still has elements
     } else {
         // lists are equal
         return false;
@@ -587,15 +638,17 @@ bool SelfOrganizingList<T>::operator<=(const SelfOrganizingList<T>& other) const
     return !(*this > other);
 }
 
+// putting back of sorted order
 template <typename T>
 void SelfOrganizingList<T>::put_back(Node* node) {
     Node* curr = m_asc_head;
-    if (!m_asc_head) {
+    if (!m_asc_head) { 
         m_asc_head = node;
         node -> m_asc = nullptr;
         m_desc_head = node;
         node -> m_desc = nullptr;
     } else {
+        // moving to the end of ascending order
         while (curr -> m_asc) {
             curr = curr -> m_asc;
         }
@@ -606,6 +659,7 @@ void SelfOrganizingList<T>::put_back(Node* node) {
     }
 }
 
+// putting at front of sorted order
 template <typename T>
 void SelfOrganizingList<T>::put_front(Node* node) {
     Node* curr = m_asc_head;
@@ -621,18 +675,20 @@ void SelfOrganizingList<T>::put_front(Node* node) {
     }
 }
  
+// puting node in sorted order
 template <typename T>
 void SelfOrganizingList<T>::put_in_sorted_order(Node* node) {
     Node* curr = m_head;
     Node* asc = m_asc_head;
     Node* desc = m_desc_head; 
+    // finding place where must be putted 
     while (asc && asc -> m_value < node -> m_value) {
         asc = asc -> m_asc;
     }
 
-    if (!asc) {
+    if (!asc) {  // if we reached end of ascending order put at the end
         put_back(node);
-    } else if (asc == m_asc_head) {
+    } else if (asc == m_asc_head) { // if must be putted at front
         put_front(node);
     } else {
         node -> m_asc = asc;
@@ -642,36 +698,39 @@ void SelfOrganizingList<T>::put_in_sorted_order(Node* node) {
     }
 }
 
+// removing node from sorted order
 template <typename T>
 void SelfOrganizingList<T>::remove_from_sorted_order(Node* node) {
-    if (node == m_asc_head) {
-        m_asc_head = m_asc_head -> m_asc;
+    if (node == m_asc_head) { // check if the node is the head of the ascending order 
+        m_asc_head = m_asc_head -> m_asc; // update the ascending head to the next node
         m_asc_head -> m_asc -> m_desc = nullptr;
         return;
     } 
+    // if the node is not the ascending head, update links
     if (node -> m_asc) {
-        node -> m_asc -> m_desc = node -> m_desc;
+        node -> m_asc -> m_desc = node -> m_desc; // update the descending link of the previous node
     } 
     if (node -> m_desc){
-        node -> m_desc -> m_asc = node -> m_asc;
+        node -> m_desc -> m_asc = node -> m_asc; // update the ascending link of the next node
     }
 }
 
+// getting node at of some position
 template <typename T>
 typename SelfOrganizingList<T>::Node* SelfOrganizingList<T>::get_node_at_pos(const std::size_t pos) {
-    if (pos < 0 || pos >= m_size) {
+    if (pos < 0 || pos >= m_size) { // if position is invalid
         throw std::invalid_argument("Invalid position");
     }
 
     Node* curr = nullptr;
-    if (pos < m_size / 2) {
+    if (pos < m_size / 2) { // if position is lesser than size / 2 start searching from head
         curr = m_head;
         std::size_t count{};
         while (curr && pos != count) {
             ++count;
             curr = curr -> m_next;
         }
-    } else {
+    } else { // if position is greater than size / 2 start searching from tail
         curr = m_tail;
         std::size_t count = m_size - 1;
         while (curr && pos != count) {
@@ -682,27 +741,29 @@ typename SelfOrganizingList<T>::Node* SelfOrganizingList<T>::get_node_at_pos(con
     return curr;
 }
 
+// provides a self-organizing nature of this list
+// elements that are accessed are moved closer to the front of the list to reduce access time.
 template <typename T>
 void SelfOrganizingList<T>::advance_node(Node* node) {
-    if (!node || node == m_head) {
+    if (!node || node == m_head) {  // if node is front element
         return;
     }
-    Node* lhs = node -> m_prev;
-    if (lhs -> m_prev && node -> m_next) {
+    Node* lhs = node -> m_prev; // lhs is previous node of given nodee
+    if (lhs -> m_prev && node -> m_next) { // if lhs 'previous' and given node's 'next' exists
         lhs -> m_prev -> m_next = node;
         node -> m_prev = lhs -> m_prev;
         lhs -> m_next = node -> m_next;
         node -> m_next -> m_prev = lhs;
         node -> m_next = lhs;
         lhs -> m_prev  = node;
-    } else if (!lhs -> m_prev) {
+    } else if (!lhs -> m_prev) { // if lhs 'previous' doesn't exist
         node -> m_prev = lhs -> m_prev;
         lhs -> m_prev = node;
         lhs -> m_next = node -> m_next;
         node -> m_next -> m_prev = lhs;
         node -> m_next = lhs;
         m_head = node;
-    } else {
+    } else { // if given node's 'next' doesn't exist
         lhs -> m_prev -> m_next = node;
         node -> m_prev = lhs -> m_prev;
         lhs -> m_prev = node;
